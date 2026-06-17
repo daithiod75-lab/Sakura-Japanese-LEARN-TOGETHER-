@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakura Bridges: Japanese Self-Introduction App for Indian Students</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Kosugi Maru (for cute Japanese rounded font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Kosugi+Maru&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Kosugi Maru', sans-serif;
+            background-color: #fff5f6;
+        }
+        .font-jp {
+            font-family: 'Kosugi Maru', sans-serif;
+        }
+        /* Sakura petal falling animation */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            overflow: hidden;
+        }
+        .petal {
+            position: absolute;
+            background-color: #ffb7c5;
+            border-radius: 150% 0 150% 150%;
+            opacity: 0.8;
+            transform-origin: left top;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(105vh) translateX(120px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        /* Navigation tab styling */
+        .tab-active {
+            background-color: #ff6b8b;
+            color: white;
+            box-shadow: 0 4px 14px rgba(255, 107, 139, 0.4);
+            transform: translateY(-2px);
+        }
+        /* Custom scrollbar for beautiful UI */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #ffe3e8;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffb7c5;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff8fa3;
+        }
+        /* Printing optimizations */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-card {
+                border: 2px solid #ddd !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col relative text-gray-800 pb-12">
+
+    <!-- Falling petals background -->
+    <div id="sakura-bg" class="sakura-container no-print"></div>
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-pink-400 via-rose-300 to-amber-100 text-white shadow-md relative overflow-hidden no-print">
+        <!-- Floating cute shapes -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
+        <div class="absolute bottom-0 left-10 w-24 h-24 bg-pink-100 opacity-20 rounded-full -mb-10"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4 relative z-20">
+            <div class="flex items-center gap-4">
+                <!-- Cute SVG Mascot: India-Japan Friendship Flag & Sakura/Lotus -->
+                <div class="bg-white p-2.5 rounded-full shadow-md flex items-center justify-center border-2 border-pink-200">
+                    <svg class="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Indian Flag representation (Orange, White, Green) -->
+                        <path d="M20 30h30v10H20z" fill="#FF9933"/>
+                        <path d="M20 40h30v10H20z" fill="#FFFFFF"/>
+                        <path d="M20 50h30v10H20z" fill="#138808"/>
+                        <circle cx="35" cy="45" r="4" stroke="#000080" stroke-width="1.5" fill="none"/>
+                        <!-- Japan Flag representation -->
+                        <path d="M50 30h30v30H50z" fill="#FFFFFF"/>
+                        <circle cx="65" cy="45" r="10" fill="#BC002D"/>
+                        <!-- Sakura/Lotus connector -->
+                        <path d="M48 65 C48 55, 52 55, 52 65 C52 75, 48 75, 48 65" fill="#FFB7C5"/>
+                        <path d="M40 67 C42 60, 48 62, 45 70 C42 78, 38 74, 40 67" fill="#FF9999"/>
+                        <path d="M60 67 C58 60, 52 62, 55 70 C58 78, 62 74, 60 67" fill="#FF9999"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-extrabold tracking-tight font-jp drop-shadow-sm">さくらブリッジ <span class="text-xl md:text-2xl font-bold font-sans">Sakura Bridges</span></h1>
+                    <p class="text-xs md:text-sm font-semibold opacity-90 mt-0.5">Interactive Japanese Self-Introduction Program for Indian Students 🇮🇳 🤝 🇯🇵</p>
+                </div>
+            </div>
+            
+            <!-- Global Options: Language switcher & Speech helper -->
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <button onclick="toggleGlobalLanguage()" class="bg-white text-rose-500 font-bold px-4 py-2 rounded-full shadow hover:bg-rose-50 transition flex items-center gap-2 border-2 border-rose-300">
+                    <span id="lang-btn-flag">🌐</span>
+                    <span id="lang-btn-text">Switch to Japanese UI</span>
+                </button>
+                <button onclick="toggleSakuraAnimation()" class="bg-pink-100/50 hover:bg-pink-100 text-pink-700 font-bold px-3 py-2 rounded-full text-xs flex items-center gap-1.5 border border-pink-300 transition">
+                    🌸 <span id="sakura-toggle-text">Disable Sakura Effect</span>
+                </button>
+                <div class="bg-rose-600/30 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2">
+                    <span class="animate-pulse inline-block w-2.5 h-2.5 rounded-full bg-green-400"></span>
+                    <span id="audio-status">Audio Engine (TTS) Ready</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs Section -->
+    <nav class="bg-pink-100/55 py-3 border-b border-pink-200 no-print sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto gap-2 py-1 scroll-bar-hide">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-pink-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap tab-active">
+                🌸 Dashboard
+            </button>
+            <button onclick="switchTab('lesson1')" id="tab-lesson1" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-pink-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap">
+                🎒 L1: Who Am I?
+            </button>
+            <button onclick="switchTab('lesson2')" id="tab-lesson2" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-pink-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap">
+                🏫 L2: School & Family
+            </button>
+            <button onclick="switchTab('lesson3')" id="tab-lesson3" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-pink-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap">
+                🍛 L3: Hobbies & Likes
+            </button>
+            <button onclick="switchTab('lesson4')" id="tab-lesson4" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-pink-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap">
+                🚀 L4: Future Dreams
+            </button>
+            <button onclick="switchTab('lesson5')" id="tab-lesson5" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-pink-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap">
+                🗼 L5: Japan Experience
+            </button>
+            <button onclick="switchTab('lesson6')" id="tab-lesson6" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-pink-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap bg-rose-200/50">
+                🎤 L6: Speech Festival
+            </button>
+            <button onclick="switchTab('worksheets')" id="tab-worksheets" class="tab-btn px-4 py-2 rounded-full font-bold text-sm text-rose-700 transition duration-300 flex items-center gap-1.5 whitespace-nowrap border border-pink-300">
+                📄 Print Worksheets
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Box -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 mt-6 relative z-20 no-print">
+        
+        <!-- ==================== DASHBOARD TAB ==================== -->
+        <div id="content-dashboard" class="tab-content block space-y-6">
+            <!-- Welcome Card -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-xl border-4 border-pink-200 flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+                <div class="absolute -bottom-8 -left-8 w-40 h-40 bg-pink-100/50 rounded-full"></div>
+                <div class="relative z-10 space-y-3 flex-grow">
+                    <span class="inline-block bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Konnichiwa! नमस्ते</span>
+                    <h2 class="text-3xl font-extrabold text-pink-600 font-jp" id="dash-welcome-title">Welcome to Japan, Dear Friends! 🌸</h2>
+                    <p class="text-gray-600 leading-relaxed text-sm md:text-base" id="dash-welcome-desc">
+                        This app is specially crafted for Indian exchange students in Japan. Our goal is to prepare you for the <strong>"Japanese Speech Festival"</strong>. By finishing these 6 short lessons, you'll be able to introduce yourself beautifully, discuss your hobbies, explain your impressions of beautiful Japan, and talk about your future dreams in perfect Japanese!
+                    </p>
+                    <div class="flex flex-wrap gap-2.5 pt-2">
+                        <div class="bg-rose-50 px-4 py-2.5 rounded-xl border border-rose-100 text-xs text-rose-700 font-semibold flex items-center gap-2">
+                            <span>🔊</span> <span>Click speech icons to practice listening on any desktop or mobile device.</span>
+                        </div>
+                        <div class="bg-amber-50 px-4 py-2.5 rounded-xl border border-amber-100 text-xs text-amber-700 font-semibold flex items-center gap-2">
+                            <span>✍️</span> <span>Personalize your final speech in Lesson 6.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-48 h-48 flex-shrink-0 bg-gradient-to-tr from-pink-200 to-amber-100 rounded-2xl flex items-center justify-center p-4 border-2 border-pink-100 shadow-inner">
+                    <!-- Cute cartoon mount fuji / Taj mahal composite illustration -->
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <!-- Fuji back -->
+                        <path d="M10 90 L50 20 L90 90 Z" fill="#4B6FA6"/>
+                        <path d="M38 41 L50 20 L62 41 C58 38, 52 43, 50 38 C48 43, 42 38, 38 41 Z" fill="#FFFFFF"/>
+                        <!-- Sun -->
+                        <circle cx="50" cy="45" r="10" fill="#ff4d6d" opacity="0.8"/>
+                        <!-- Lotus base -->
+                        <path d="M30 90 C30 80, 40 85, 50 85 C60 85, 70 80, 70 90 Z" fill="#ff8fa3"/>
+                        <path d="M40 90 C45 80, 50 82, 50 90 Z" fill="#ffb7c5"/>
+                        <path d="M60 90 C55 80, 50 82, 50 90 Z" fill="#ffb7c5"/>
+                        <!-- Text -->
+                        <text x="50" y="80" text-anchor="middle" font-size="6" fill="#FFF" font-weight="bold">INDIA & JAPAN</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Quick Progress Tracker & Curriculum Grid -->
+            <div>
+                <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🗺️</span> <span id="dash-curriculum-title">Your Japanese Learning Journey</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Lesson 1 Card -->
+                    <div onclick="switchTab('lesson1')" class="cursor-pointer bg-white p-5 rounded-2xl border-2 border-pink-100 shadow-sm hover:shadow-md hover:border-pink-300 transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-md">Lesson 1</span>
+                            <span class="text-2xl group-hover:scale-110 transition-transform">🎒</span>
+                        </div>
+                        <h4 class="font-extrabold text-lg text-gray-800 group-hover:text-rose-500 transition-colors">Basic Greetings & Identity</h4>
+                        <p class="text-gray-500 text-xs mt-1">Learn to greet, share your name, country of origin, and age (numbers 10-20).</p>
+                        <div class="mt-4 flex items-center justify-between text-xs text-rose-400 font-bold">
+                            <span>3 Activities</span>
+                            <span>Let's Start →</span>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 2 Card -->
+                    <div onclick="switchTab('lesson2')" class="cursor-pointer bg-white p-5 rounded-2xl border-2 border-pink-100 shadow-sm hover:shadow-md hover:border-pink-300 transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-md">Lesson 2</span>
+                            <span class="text-2xl group-hover:scale-110 transition-transform">🏫</span>
+                        </div>
+                        <h4 class="font-extrabold text-lg text-gray-800 group-hover:text-rose-500 transition-colors">School & Family Structure</h4>
+                        <p class="text-gray-500 text-xs mt-1">Talk about what grade you are in and describe your siblings & family size.</p>
+                        <div class="mt-4 flex items-center justify-between text-xs text-rose-400 font-bold">
+                            <span>2 Activities</span>
+                            <span>Let's Start →</span>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 3 Card -->
+                    <div onclick="switchTab('lesson3')" class="cursor-pointer bg-white p-5 rounded-2xl border-2 border-pink-100 shadow-sm hover:shadow-md hover:border-pink-300 transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-md">Lesson 3</span>
+                            <span class="text-2xl group-hover:scale-110 transition-transform">🍛</span>
+                        </div>
+                        <h4 class="font-extrabold text-lg text-gray-800 group-hover:text-rose-500 transition-colors">Hobbies, Likes & Dislikes</h4>
+                        <p class="text-gray-500 text-xs mt-1">Express your favorite things like anime, sports, curry, and funny foods like natto!</p>
+                        <div class="mt-4 flex items-center justify-between text-xs text-rose-400 font-bold">
+                            <span>3 Activities</span>
+                            <span>Let's Start →</span>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 4 Card -->
+                    <div onclick="switchTab('lesson4')" class="cursor-pointer bg-white p-5 rounded-2xl border-2 border-pink-100 shadow-sm hover:shadow-md hover:border-pink-300 transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-md">Lesson 4</span>
+                            <span class="text-2xl group-hover:scale-110 transition-transform">🚀</span>
+                        </div>
+                        <h4 class="font-extrabold text-lg text-gray-800 group-hover:text-rose-500 transition-colors">Future Dreams & University</h4>
+                        <p class="text-gray-500 text-xs mt-1">Talk about your future dream careers (engineer, scientist, doctor) and university plans.</p>
+                        <div class="mt-4 flex items-center justify-between text-xs text-rose-400 font-bold">
+                            <span>2 Activities</span>
+                            <span>Let's Start →</span>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 5 Card -->
+                    <div onclick="switchTab('lesson5')" class="cursor-pointer bg-white p-5 rounded-2xl border-2 border-pink-100 shadow-sm hover:shadow-md hover:border-pink-300 transition-all duration-300 group">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-md">Lesson 5</span>
+                            <span class="text-2xl group-hover:scale-110 transition-transform">🗼</span>
+                        </div>
+                        <h4 class="font-extrabold text-lg text-gray-800 group-hover:text-rose-500 transition-colors">Japan Experience & Culture</h4>
+                        <p class="text-gray-500 text-xs mt-1">Share your thoughts on Japanese culture, clean cities, and school experiences.</p>
+                        <div class="mt-4 flex items-center justify-between text-xs text-rose-400 font-bold">
+                            <span>2 Activities</span>
+                            <span>Let's Start →</span>
+                        </div>
+                    </div>
+
+                    <!-- Lesson 6 Card -->
+                    <div onclick="switchTab('lesson6')" class="cursor-pointer bg-gradient-to-br from-rose-500 to-pink-500 p-5 rounded-2xl border-2 border-transparent shadow-md hover:shadow-xl transition-all duration-300 group text-white">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-white bg-white/20 px-2 py-1 rounded-md">Lesson 6</span>
+                            <span class="text-2xl group-hover:animate-bounce">🎤</span>
+                        </div>
+                        <h4 class="font-extrabold text-lg text-white group-hover:underline">Self-Introduction Speech Maker</h4>
+                        <p class="text-white/80 text-xs mt-1">Assemble everything you've practiced into your custom speech, listen to it, and practice!</p>
+                        <div class="mt-4 flex items-center justify-between text-xs text-white font-bold">
+                            <span>SPEECH GENERATOR</span>
+                            <span>Build Speech Now →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indian Students Tips -->
+            <div class="bg-amber-50 rounded-2xl p-5 border-2 border-amber-200">
+                <h4 class="font-extrabold text-amber-800 flex items-center gap-2">
+                    💡 Useful Japanese Etiquette Tip for Indian Exchange Students
+                </h4>
+                <p class="text-sm text-amber-700/90 mt-2 leading-relaxed">
+                    When giving your speech at the Speech Festival, keep your hands respectfully down by your side or folded slightly in front of you. Bow politely when saying <strong>よろしくお願いします (Yoroshiku onegaishimasu)</strong> and <strong>ありがとうございました (Arigatou gozaimashita)</strong>. The traditional greeting bow represents a high form of mutual respect and friendship between our two countries!
+                </p>
+            </div>
+        </div>
+
+        <!-- ==================== LESSON 1 TAB ==================== -->
+        <div id="content-lesson1" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <span class="text-xs font-bold text-pink-500 bg-pink-50 px-2.5 py-1 rounded-md">Lesson 1: Basic Self-Introduction</span>
+                <h2 class="text-2xl font-extrabold mt-2 text-gray-800">Part 1: The Essential Greeting Trio 🌸</h2>
+                <p class="text-gray-500 text-sm mt-1">These are the most important phrases in any Japanese self-introduction. Listen and repeat out loud!</p>
+
+                <!-- Greetings interactive cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div class="bg-pink-50/50 p-4 rounded-2xl border border-pink-100 flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <div>
+                            <span class="text-xs font-bold text-pink-500 bg-white px-2 py-0.5 rounded-full shadow-sm">Hello</span>
+                            <p class="text-2xl font-extrabold font-jp text-pink-600 mt-2">こんにちは。</p>
+                            <p class="text-xs text-gray-500 italic">Konnichiwa</p>
+                        </div>
+                        <button onclick="speakJapanese('こんにちは。')" class="mt-4 bg-white text-pink-500 border border-pink-200 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-pink-50 transition">
+                            🔊 Play Sound
+                        </button>
+                    </div>
+
+                    <div class="bg-pink-50/50 p-4 rounded-2xl border border-pink-100 flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <div>
+                            <span class="text-xs font-bold text-pink-500 bg-white px-2 py-0.5 rounded-full shadow-sm">Nice to meet you (Beginning)</span>
+                            <p class="text-2xl font-extrabold font-jp text-pink-600 mt-2">はじめまして。</p>
+                            <p class="text-xs text-gray-500 italic">Hajimemashite</p>
+                        </div>
+                        <button onclick="speakJapanese('はじめまして。')" class="mt-4 bg-white text-pink-500 border border-pink-200 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-pink-50 transition">
+                            🔊 Play Sound
+                        </button>
+                    </div>
+
+                    <div class="bg-pink-50/50 p-4 rounded-2xl border border-pink-100 flex flex-col justify-between hover:scale-[1.02] transition-transform">
+                        <div>
+                            <span class="text-xs font-bold text-pink-500 bg-white px-2 py-0.5 rounded-full shadow-sm">Please treat me kindly (Closing)</span>
+                            <p class="text-2xl font-extrabold font-jp text-pink-600 mt-2">よろしく おねがいします。</p>
+                            <p class="text-xs text-gray-500 italic">Yoroshiku onegaishimasu</p>
+                        </div>
+                        <button onclick="speakJapanese('よろしくおねがいします。')" class="mt-4 bg-white text-pink-500 border border-pink-200 py-1.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-pink-50 transition">
+                            🔊 Play Sound
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 2: Your Name & Country -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <h2 class="text-2xl font-extrabold text-gray-800">Part 2: Introducing Name & Country 🌍</h2>
+                <p class="text-gray-500 text-sm mt-1">Let everyone know who you are and where you came from.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Name Formatter -->
+                    <div class="border border-pink-100 p-5 rounded-2xl bg-gradient-to-br from-pink-50/20 to-amber-50/25">
+                        <h3 class="font-bold text-pink-600 text-sm">💡 My Name is... (わたしは ______ です)</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Fill in your name in English or Katakana (like <strong>プリアンシャ</strong>) to practice pronouncing!</p>
+                        
+                        <div class="mt-3 flex gap-2">
+                            <input type="text" id="practice-name-input" value="プリアンシャ" oninput="updatePracticeName()" class="bg-white border-2 border-pink-200 px-3 py-1.5 rounded-xl text-sm w-full focus:outline-pink-400 font-jp" placeholder="Type your name...">
+                            <button onclick="playCustomNamePhrase()" class="bg-pink-500 text-white font-bold px-4 rounded-xl text-xs hover:bg-pink-600 transition shadow whitespace-nowrap">Speak Sentence</button>
+                        </div>
+                        <div class="mt-3 bg-white p-3 rounded-xl border border-pink-100">
+                            <p class="text-xs text-gray-400 font-bold uppercase">Result Phrase:</p>
+                            <p class="text-xl font-bold font-jp text-gray-800 mt-1" id="practice-name-output">わたしは プリアンシャ です。</p>
+                        </div>
+                    </div>
+
+                    <!-- Country Practice with Expanded Lists -->
+                    <div class="border border-pink-100 p-5 rounded-2xl bg-gradient-to-br from-pink-50/20 to-amber-50/25">
+                        <h3 class="font-bold text-pink-600 text-sm">🗺️ I came from... (______ から きました)</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Select your home country or target countries to hear the phrase in Japanese!</p>
+                        
+                        <div class="grid grid-cols-3 gap-2 mt-3">
+                            <button onclick="selectCountry('インド', 'India')" class="country-btn border-2 border-pink-500 bg-pink-100/50 p-2 rounded-xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+                                <span>🇮🇳</span><span>インド (India)</span>
+                            </button>
+                            <button onclick="selectCountry('アメリカ', 'USA')" class="country-btn border border-pink-100 bg-white hover:bg-pink-50 p-2 rounded-xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+                                <span>🇺🇸</span><span>アメリカ (USA)</span>
+                            </button>
+                            <button onclick="selectCountry('イギリス', 'UK')" class="country-btn border border-pink-100 bg-white hover:bg-pink-50 p-2 rounded-xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+                                <span>🇬🇧</span><span>イギリス (UK)</span>
+                            </button>
+                            <button onclick="selectCountry('アイルランド', 'Ireland')" class="country-btn border border-pink-100 bg-white hover:bg-pink-50 p-2 rounded-xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+                                <span>🇮🇪</span><span>アイルランド</span>
+                            </button>
+                            <button onclick="selectCountry('オーストラリア', 'Australia')" class="country-btn border border-pink-100 bg-white hover:bg-pink-50 p-2 rounded-xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+                                <span>🇦🇺</span><span>オーストラリア</span>
+                            </button>
+                            <button onclick="selectCountry('カナダ', 'Canada')" class="country-btn border border-pink-100 bg-white hover:bg-pink-50 p-2 rounded-xl text-xs font-bold text-gray-700 transition flex flex-col items-center gap-1 shadow-sm">
+                                <span>🇨🇦</span><span>カナダ (Canada)</span>
+                            </button>
+                        </div>
+                        <div class="mt-3 bg-white p-3 rounded-xl border border-pink-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">Result Phrase:</p>
+                                <p class="text-xl font-bold font-jp text-gray-800 mt-1" id="practice-country-output">インド から きました。</p>
+                                <p class="text-xs text-gray-500 italic" id="practice-country-romaji">Indo kara kimashita.</p>
+                            </div>
+                            <button onclick="playCustomCountryPhrase()" class="bg-amber-400 text-amber-900 font-bold p-2.5 rounded-full hover:bg-amber-500 transition shadow flex items-center justify-center">🔊</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 3: My Age (10-20) -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <h2 class="text-2xl font-extrabold text-gray-800">Part 3: Sharing Your Age (10 to 20) 🎂</h2>
+                <p class="text-gray-500 text-sm mt-1">To state your age, say: <strong>______ さい です (______ sai desu)</strong>. Select numbers 10-20 from our keypad!</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Sound Pad -->
+                    <div>
+                        <p class="text-sm font-bold text-gray-700 mb-2">Tap any age to practice pronunciation:</p>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="selectAge(10, 'じゅう')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                10<br><span class="text-xs font-normal">じゅう</span>
+                            </button>
+                            <button onclick="selectAge(11, 'じゅういち')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                11<br><span class="text-xs font-normal">じゅういち</span>
+                            </button>
+                            <button onclick="selectAge(12, 'じゅうに')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                12<br><span class="text-xs font-normal">じゅうに</span>
+                            </button>
+                            <button onclick="selectAge(13, 'じゅうさん')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                13<br><span class="text-xs font-normal">じゅうさん</span>
+                            </button>
+                            <button onclick="selectAge(14, 'じゅうよん')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                14<br><span class="text-xs font-normal">じゅうよん</span>
+                            </button>
+                            <button onclick="selectAge(15, 'じゅうご')" class="age-btn bg-pink-200 border border-pink-400 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                15<br><span class="text-xs font-normal">じゅうご</span>
+                            </button>
+                            <button onclick="selectAge(16, 'じゅうろく')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                16<br><span class="text-xs font-normal">じゅうろく</span>
+                            </button>
+                            <button onclick="selectAge(17, 'じゅうなな')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                17<br><span class="text-xs font-normal">じゅうなな</span>
+                            </button>
+                            <button onclick="selectAge(18, 'じゅうはち')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                18<br><span class="text-xs font-normal">じゅうはち</span>
+                            </button>
+                            <button onclick="selectAge(19, 'じゅうきゅう')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                19<br><span class="text-xs font-normal">じゅうきゅう</span>
+                            </button>
+                            <button onclick="selectAge(20, 'はたち')" class="age-btn bg-white border border-pink-100 p-3 rounded-xl font-bold font-jp text-pink-600 hover:bg-pink-100 transition text-center shadow-sm">
+                                20<br><span class="text-xs font-normal">はたち</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sentence Generator display -->
+                    <div class="bg-gradient-to-r from-pink-50 to-amber-50 p-5 rounded-2xl flex flex-col justify-between border border-pink-100 shadow-inner">
+                        <div>
+                            <span class="text-xs font-bold text-pink-600 uppercase">Age Selected: <span id="selected-age-num" class="text-sm">15</span> years old</span>
+                            <p class="text-3xl font-extrabold font-jp text-pink-600 mt-4" id="practice-age-output">じゅうご さい です。</p>
+                            <p class="text-sm text-gray-500 italic mt-1" id="practice-age-romaji">Juugo sai desu.</p>
+                            <p class="text-xs text-amber-700 font-semibold mt-2">💡 Note: 20 years old uses the unique word "はたち" (hatachi) instead of "nijuu-sai"!</p>
+                        </div>
+                        <button onclick="playCustomAgePhrase()" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+                            <span>🔊 Listen to full age statement</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== LESSON 2 TAB ==================== -->
+        <div id="content-lesson2" class="tab-content hidden space-y-6">
+            <!-- School Year -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <span class="text-xs font-bold text-pink-500 bg-pink-50 px-2.5 py-1 rounded-md">Lesson 2: School & Family</span>
+                <h2 class="text-2xl font-extrabold mt-2 text-gray-800 font-jp">Part 1: My Grade/School Year 🏫</h2>
+                <p class="text-gray-500 text-sm mt-1">Tell your Japanese peers which school year you are currently in.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Grade Selection -->
+                    <div class="space-y-3">
+                        <p class="text-sm font-semibold text-gray-700">Select your current school grade:</p>
+                        <button onclick="selectGrade('ちゅうがく さんねんせい', 'Junior High School Year 3 (Grade 9)')" class="grade-btn w-full text-left p-4 rounded-2xl bg-white border-2 border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <div>
+                                <h4 class="font-extrabold text-gray-800 text-sm">Junior High 3rd Year</h4>
+                                <p class="text-xs text-pink-500 mt-1 font-jp">ちゅうがく さんねんせい です。</p>
+                            </div>
+                            <span class="bg-pink-100 p-2 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectGrade('こうこう いちねんせい', 'High School Year 1 (Grade 10)')" class="grade-btn w-full text-left p-4 rounded-2xl bg-white border-2 border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <div>
+                                <h4 class="font-extrabold text-gray-800 text-sm">High School 1st Year</h4>
+                                <p class="text-xs text-pink-500 mt-1 font-jp">こうこう いちねんせい です。</p>
+                            </div>
+                            <span class="bg-pink-100 p-2 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectGrade('こうこう にねんせい', 'High School Year 2 (Grade 11)')" class="grade-btn w-full text-left p-4 rounded-2xl bg-white border-2 border-pink-300 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <div>
+                                <h4 class="font-extrabold text-gray-800 text-sm">High School 2nd Year</h4>
+                                <p class="text-xs text-pink-500 mt-1 font-jp">こうこう にねんせい です。</p>
+                            </div>
+                            <span class="bg-pink-100 p-2 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectGrade('こうこう さんねんせい', 'High School Year 3 (Grade 12)')" class="grade-btn w-full text-left p-4 rounded-2xl bg-white border-2 border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <div>
+                                <h4 class="font-extrabold text-gray-800 text-sm">High School 3rd Year</h4>
+                                <p class="text-xs text-pink-500 mt-1 font-jp">こうこう さんねんせい です。</p>
+                            </div>
+                            <span class="bg-pink-100 p-2 rounded-full text-xs">🔊</span>
+                        </button>
+                    </div>
+
+                    <!-- Sentence Display -->
+                    <div class="bg-pink-50/50 p-6 rounded-3xl border border-pink-100 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-pink-600 uppercase">Selected Grade: <span id="selected-grade-label" class="text-gray-800">High School Year 2</span></h4>
+                            <p class="text-2xl font-extrabold font-jp text-pink-600 mt-4" id="practice-grade-output">こうこう にねんせい です。</p>
+                            <p class="text-xs text-gray-500 italic mt-1" id="practice-grade-romaji">Koukou ninensei desu.</p>
+                        </div>
+                        <div class="bg-white p-3 rounded-2xl border border-pink-100 text-xs text-gray-600 mt-4">
+                            <strong>Vocabulary Breakdown:</strong> <br>
+                            - ちゅうがく = Junior High School (Grades 7-9)<br>
+                            - こうこう = High School (Grades 10-12)<br>
+                            - ねんせい = Student of year...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Family Members -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <h2 class="text-2xl font-extrabold text-gray-800 font-jp">Part 2: Introducing Your Family 👨‍👩‍👧‍👦</h2>
+                <p class="text-gray-500 text-sm mt-1">To tell how many family members you have: <strong>かぞくは ______ にんです (Kazoku wa ______ nin desu)</strong>.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Family Size Selector -->
+                    <div class="space-y-4">
+                        <p class="text-sm font-semibold text-gray-700">How many family members in your home?</p>
+                        <div class="flex items-center gap-3 bg-pink-50/50 p-3 rounded-2xl border border-pink-100">
+                            <button onclick="adjustFamilyCount(-1)" class="bg-pink-500 hover:bg-pink-600 text-white font-bold w-12 h-12 rounded-full shadow flex items-center justify-center text-xl transition">-</button>
+                            <div class="text-center flex-grow">
+                                <span class="text-3xl font-extrabold text-pink-600" id="family-count-display">5</span>
+                                <span class="text-xs text-gray-500 block">People (にん / nin)</span>
+                            </div>
+                            <button onclick="adjustFamilyCount(1)" class="bg-pink-500 hover:bg-pink-600 text-white font-bold w-12 h-12 rounded-full shadow flex items-center justify-center text-xl transition">+</button>
+                        </div>
+
+                        <!-- Optional siblings switches -->
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-gray-500 block font-jp">Add Siblings (Optional Statement):</span>
+                            <div class="flex gap-2 flex-wrap">
+                                <button id="sibling-btn-sister" onclick="toggleSibling('sister')" class="flex-1 min-w-[140px] bg-white border border-pink-200 hover:bg-pink-50 px-3 py-2.5 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm">
+                                    🙋‍♀️ Older Sister (あね が います)
+                                </button>
+                                <button id="sibling-btn-brother" onclick="toggleSibling('brother')" class="flex-1 min-w-[140px] bg-white border border-pink-200 hover:bg-pink-50 px-3 py-2.5 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm">
+                                    🙋‍♂️ Younger Brother (おとうと が います)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Output Sentence Card -->
+                    <div class="bg-gradient-to-tr from-pink-50 to-amber-50 p-6 rounded-3xl border border-pink-100 flex flex-col justify-between">
+                        <div>
+                            <p class="text-xs font-bold text-pink-600 uppercase">Your Family Sentence:</p>
+                            <p class="text-2xl font-extrabold font-jp text-pink-600 mt-4" id="practice-family-output">かぞくは ５にんです。</p>
+                            <p class="text-xs text-gray-500 italic mt-1" id="practice-family-romaji">Kazoku wa go nin desu.</p>
+
+                            <!-- Optional sibling output statement -->
+                            <div id="sibling-extra-phrase-box" class="mt-4 pt-3 border-t border-dashed border-pink-200 hidden">
+                                <p class="text-xs font-bold text-gray-400">SIBLINGS STATEMENT:</p>
+                                <p class="text-lg font-bold font-jp text-gray-800" id="sibling-extra-phrase">あね が います。</p>
+                            </div>
+                        </div>
+                        <button onclick="playCustomFamilyPhrase()" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white font-bold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5">
+                            🔊 <span>Listen to family sentences</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== LESSON 3 TAB ==================== -->
+        <div id="content-lesson3" class="tab-content hidden space-y-6">
+            <!-- Hobbies -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <span class="text-xs font-bold text-pink-500 bg-pink-50 px-2.5 py-1 rounded-md">Lesson 3: Hobbies & Favorites</span>
+                <h2 class="text-2xl font-extrabold mt-2 text-gray-800 font-jp">Part 1: Your Hobbies 🎨</h2>
+                <p class="text-gray-500 text-sm mt-1">Describe your hobby using: <strong>しゅみ は ______ です (Shumi wa ______ desu)</strong>.</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <!-- Hobbies Options -->
+                    <div onclick="selectHobby('サッカー', 'Soccer')" class="hobby-card cursor-pointer bg-white border border-pink-100 hover:border-pink-300 p-4 rounded-2xl shadow-sm text-center transition hover:scale-[1.02]">
+                        <span class="text-4xl">⚽</span>
+                        <h4 class="font-extrabold text-sm text-gray-800 mt-2">Soccer</h4>
+                        <p class="text-xs text-pink-500 font-jp">サッカー</p>
+                    </div>
+                    <div onclick="selectHobby('おんがく', 'Music')" class="hobby-card cursor-pointer bg-white border-2 border-pink-500 bg-pink-100/20 p-4 rounded-2xl shadow-sm text-center transition hover:scale-[1.02]">
+                        <span class="text-4xl">🎵</span>
+                        <h4 class="font-extrabold text-sm text-gray-800 mt-2">Music</h4>
+                        <p class="text-xs text-pink-500 font-jp">おんがく</p>
+                    </div>
+                    <div onclick="selectHobby('どくしょ', 'Reading')" class="hobby-card cursor-pointer bg-white border border-pink-100 hover:border-pink-300 p-4 rounded-2xl shadow-sm text-center transition hover:scale-[1.02]">
+                        <span class="text-4xl">📚</span>
+                        <h4 class="font-extrabold text-sm text-gray-800 mt-2">Reading</h4>
+                        <p class="text-xs text-pink-500 font-jp">どくしょ</p>
+                    </div>
+                    <div onclick="selectHobby('えいが', 'Movies')" class="hobby-card cursor-pointer bg-white border border-pink-100 hover:border-pink-300 p-4 rounded-2xl shadow-sm text-center transition hover:scale-[1.02]">
+                        <span class="text-4xl">🎬</span>
+                        <h4 class="font-extrabold text-sm text-gray-800 mt-2">Movies</h4>
+                        <p class="text-xs text-pink-500 font-jp">えいが</p>
+                    </div>
+                </div>
+
+                <div class="bg-pink-50/50 p-4 rounded-2xl border border-pink-100 mt-4 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <span class="text-xs font-bold text-pink-600 uppercase">Selected Hobby Sentence:</span>
+                        <p class="text-xl font-bold font-jp text-gray-800 mt-1" id="practice-hobby-output">しゅみ は おんがく です。</p>
+                        <p class="text-xs text-gray-500 italic" id="practice-hobby-romaji">Shumi wa ongaku desu.</p>
+                    </div>
+                    <button onclick="playCustomHobbyPhrase()" class="bg-pink-500 hover:bg-pink-600 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition whitespace-nowrap flex items-center gap-1.5">
+                        🔊 <span>Listen Phrase</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Likes vs Dislikes Interactivity -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <h2 class="text-2xl font-extrabold text-gray-800 font-jp">Part 2: What You Like & Dislike 🍛 🤢</h2>
+                <p class="text-gray-500 text-sm mt-1">Likes: <strong>______ が すきです (______ ga suki desu)</strong> | Dislikes: <strong>______ が きらいです (______ ga kirai desu)</strong>.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <!-- Column 1: Liked things chooser -->
+                    <div class="bg-green-50/40 border border-green-200 p-5 rounded-2xl">
+                        <h4 class="font-extrabold text-green-700 flex items-center gap-1.5 text-sm">
+                            💚 I Like (______ が すきです)
+                        </h4>
+                        <div class="grid grid-cols-2 gap-2 mt-3">
+                            <button onclick="selectLike('カレー', 'Curry')" class="like-btn border-2 border-green-500 bg-green-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">🍛</span><br>カレー (Curry)
+                            </button>
+                            <button onclick="selectLike('アニメ', 'Anime')" class="like-btn border border-green-100 bg-white hover:bg-green-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">🎌</span><br>アニメ (Anime)
+                            </button>
+                            <button onclick="selectLike('にほんりょうり', 'Japanese Cuisine')" class="like-btn border border-green-100 bg-white hover:bg-green-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">🍣</span><br>にほんりょうり (Japanese Food)
+                            </button>
+                            <button onclick="selectLike('サッカー', 'Soccer')" class="like-btn border border-green-100 bg-white hover:bg-green-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">⚽</span><br>サッカー (Soccer)
+                            </button>
+                        </div>
+                        <div class="mt-4 bg-white p-3 rounded-xl border border-green-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">Result Sentence:</p>
+                                <p class="text-lg font-bold font-jp text-gray-800" id="practice-like-output">カレー が すきです。</p>
+                            </div>
+                            <button onclick="playCustomLikePhrase()" class="bg-green-500 text-white p-2.5 rounded-full hover:bg-green-600 transition shadow">🔊</button>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Disliked things chooser -->
+                    <div class="bg-red-50/40 border border-red-200 p-5 rounded-2xl">
+                        <h4 class="font-extrabold text-red-700 flex items-center gap-1.5 text-sm">
+                            💔 I Dislike (______ が きらいです)
+                        </h4>
+                        <div class="grid grid-cols-2 gap-2 mt-3">
+                            <button onclick="selectDislike('なっとう', 'Natto (Fermented Soybeans)')" class="dislike-btn border-2 border-red-500 bg-red-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">🫘</span><br>なっとう (Natto)
+                            </button>
+                            <button onclick="selectDislike('テスト', 'Exams/Tests')" class="dislike-btn border border-red-100 bg-white hover:bg-red-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">📝</span><br>テスト (Tests)
+                            </button>
+                            <button onclick="selectDislike('からいもの', 'Spicy Food')" class="dislike-btn border border-red-100 bg-white hover:bg-red-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">🌶️</span><br>からいもの (Spicy Food)
+                            </button>
+                            <button onclick="selectDislike('おそおき', 'Waking up late')" class="dislike-btn border border-red-100 bg-white hover:bg-red-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition text-center shadow-sm">
+                                <span class="text-xl">⏰</span><br>おそおき (Waking up late)
+                            </button>
+                        </div>
+                        <div class="mt-4 bg-white p-3 rounded-xl border border-red-100 flex justify-between items-center">
+                            <div>
+                                <p class="text-xs text-gray-400 font-bold uppercase">Result Sentence:</p>
+                                <p class="text-lg font-bold font-jp text-gray-800" id="practice-dislike-output">なっとう が きらいです。</p>
+                            </div>
+                            <button onclick="playCustomDislikePhrase()" class="bg-red-500 text-white p-2.5 rounded-full hover:bg-red-600 transition shadow">🔊</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== LESSON 4 TAB ==================== -->
+        <div id="content-lesson4" class="tab-content hidden space-y-6">
+            <!-- Dreams and Universities -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <span class="text-xs font-bold text-pink-500 bg-pink-50 px-2.5 py-1 rounded-md">Lesson 4: Future Dreams</span>
+                <h2 class="text-2xl font-extrabold mt-2 text-gray-800 font-jp">Part 1: Future University Plans 🏫</h2>
+                <p class="text-gray-500 text-sm mt-1">Which university would you like to attend? Use: <strong>______ だいがくに いきたいです (______ daigaku ni ikitaidesu)</strong>.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div class="space-y-2">
+                        <button onclick="selectUni('とうきょうだいがく', 'University of Tokyo')" class="uni-btn w-full text-left p-3 rounded-xl bg-pink-100/30 border-2 border-pink-400 transition-all flex justify-between items-center shadow-sm">
+                            <span class="font-bold text-sm">🗼 University of Tokyo (とうきょうだいがく)</span>
+                            <span class="bg-pink-100 p-1 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectUni('デリーだいがく', 'Delhi University')" class="uni-btn w-full text-left p-3 rounded-xl bg-white border border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <span class="font-bold text-sm">🕌 Delhi University (デリーだいがく)</span>
+                            <span class="bg-pink-100 p-1 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectUni('きょうとだいがく', 'Kyoto University')" class="uni-btn w-full text-left p-3 rounded-xl bg-white border border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <span class="font-bold text-sm">⛩️ Kyoto University (きょうとだいがく)</span>
+                            <span class="bg-pink-100 p-1 rounded-full text-xs">🔊</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-pink-50/50 p-5 rounded-2xl border border-pink-100 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-pink-600 uppercase">Selected University Statement:</span>
+                            <p class="text-xl font-bold font-jp text-gray-800 mt-2" id="practice-uni-output">とうきょうだいがくに いきたいです。</p>
+                            <p class="text-xs text-gray-500 italic mt-1" id="practice-uni-romaji">Toukyou daigaku ni ikitaidesu.</p>
+                        </div>
+                        <button onclick="playCustomUniPhrase()" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 rounded-xl shadow transition flex items-center justify-center gap-1.5">🔊 <span>Play Statement</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Future Career -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <h2 class="text-2xl font-extrabold text-gray-800 font-jp">Part 2: Dream Careers & Ambitions 🚀</h2>
+                <p class="text-gray-500 text-sm mt-1">What would you like to be in the future? Sentence: <strong>しょうらい ______ に なりたいです (Shourai ______ ni naritaidesu)</strong>.</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-6">
+                    <div onclick="selectCareer('エンジニア', 'Engineer')" class="career-card cursor-pointer bg-white border-2 border-pink-500 bg-amber-100/50 p-4 rounded-xl text-center shadow-sm hover:scale-105 transition-transform duration-300">
+                        <span class="text-3xl">💻</span>
+                        <h4 class="font-extrabold text-xs text-gray-700 mt-2">Engineer</h4>
+                        <p class="text-[10px] text-pink-500 font-jp">エンジニア</p>
+                    </div>
+                    <div onclick="selectCareer('いしゃ', 'Doctor')" class="career-card cursor-pointer bg-white border border-pink-100 p-4 rounded-xl text-center shadow-sm hover:scale-105 transition-transform duration-300">
+                        <span class="text-3xl">🩺</span>
+                        <h4 class="font-extrabold text-xs text-gray-700 mt-2">Doctor</h4>
+                        <p class="text-[10px] text-pink-500 font-jp">いしゃ</p>
+                    </div>
+                    <div onclick="selectCareer('かがくしゃ', 'Scientist')" class="career-card cursor-pointer bg-white border border-pink-100 p-4 rounded-xl text-center shadow-sm hover:scale-105 transition-transform duration-300">
+                        <span class="text-3xl">🔬</span>
+                        <h4 class="font-extrabold text-xs text-gray-700 mt-2">Scientist</h4>
+                        <p class="text-[10px] text-pink-500 font-jp">かがくしゃ</p>
+                    </div>
+                    <div onclick="selectCareer('パイロット', 'Pilot')" class="career-card cursor-pointer bg-white border border-pink-100 p-4 rounded-xl text-center shadow-sm hover:scale-105 transition-transform duration-300">
+                        <span class="text-3xl">✈️</span>
+                        <h4 class="font-extrabold text-xs text-gray-700 mt-2">Pilot</h4>
+                        <p class="text-[10px] text-pink-500 font-jp">パイロット</p>
+                    </div>
+                    <div onclick="selectCareer('せんせい', 'Teacher')" class="career-card cursor-pointer bg-white border border-pink-100 p-4 rounded-xl text-center shadow-sm hover:scale-105 transition-transform duration-300">
+                        <span class="text-3xl">👩‍🏫</span>
+                        <h4 class="font-extrabold text-xs text-gray-700 mt-2">Teacher</h4>
+                        <p class="text-[10px] text-pink-500 font-jp">せんせい</p>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200 mt-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <span class="text-xs font-bold text-amber-700 uppercase">Selected Career Statement:</span>
+                        <p class="text-lg font-bold font-jp text-amber-900 mt-1" id="practice-career-output">しょうらい エンジニア に なりたいです。</p>
+                        <p class="text-xs text-amber-700/80 italic" id="practice-career-romaji">Shourai enjinia ni naritaidesu.</p>
+                    </div>
+                    <button onclick="playCustomCareerPhrase()" class="bg-amber-500 hover:bg-amber-600 text-amber-950 font-bold px-6 py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5">
+                        🔊 <span>Play Phrase</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== LESSON 5 TAB ==================== -->
+        <div id="content-lesson5" class="tab-content hidden space-y-6">
+            <!-- Impressions of Japan -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <span class="text-xs font-bold text-pink-500 bg-pink-50 px-2.5 py-1 rounded-md">Lesson 5: Japan Experience</span>
+                <h2 class="text-2xl font-extrabold mt-2 text-gray-800 font-jp">Part 1: Feelings & Impressions of Japan 🌸</h2>
+                <p class="text-gray-500 text-sm mt-1">What is your opinion of Japan? Choose an adjective to form: <strong>にほん は ______ です (Nihon wa ______ desu)</strong>.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="selectImpression('きれいです', 'Beautiful (きれいです)')" class="imp-btn border-2 border-pink-500 bg-pink-100/30 p-3 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm text-center">
+                            💖 きれい (Beautiful)
+                        </button>
+                        <button onclick="selectImpression('あんぜんです', 'Safe (あんぜんです)')" class="imp-btn border border-pink-100 bg-white hover:bg-pink-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm text-center">
+                            🛡️ あんぜん (Safe)
+                        </button>
+                        <button onclick="selectImpression('おもしろいです', 'Interesting (おもしろいです)')" class="imp-btn border border-pink-100 bg-white hover:bg-pink-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm text-center">
+                            🤩 おもしろい (Fun/Interesting)
+                        </button>
+                        <button onclick="selectImpression('べんりです', 'Convenient (べんりです)')" class="imp-btn border border-pink-100 bg-white hover:bg-pink-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm text-center">
+                            🏪 べんり (Convenient)
+                        </button>
+                        <button onclick="selectImpression('しずかです', 'Quiet (しずかです)')" class="imp-btn border border-pink-100 bg-white hover:bg-pink-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm text-center">
+                            🌳 しずか (Quiet)
+                        </button>
+                        <button onclick="selectImpression('にほんのひとはしんせつです', 'Japanese people are kind (にほんのひとはしんせつです)')" class="imp-btn border border-pink-100 bg-white hover:bg-pink-50 p-3 rounded-xl text-xs font-bold text-gray-700 transition shadow-sm text-center">
+                            🤝 ひとがしんせつ (Kind People)
+                        </button>
+                    </div>
+
+                    <div class="bg-pink-50/50 p-5 rounded-2xl border border-pink-100 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-pink-600 uppercase">Your Impression Sentence:</span>
+                            <p class="text-2xl font-extrabold font-jp text-pink-600 mt-4" id="practice-imp-output">にほん は きれいです。</p>
+                            <p class="text-xs text-gray-500 italic mt-1" id="practice-imp-romaji">Nihon wa kirei desu.</p>
+                        </div>
+                        <button onclick="playCustomImpPhrase()" class="w-full mt-4 bg-pink-500 hover:bg-pink-600 text-white font-bold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5">🔊 <span>Play Statement</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What I learned in Japan -->
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <h2 class="text-2xl font-extrabold text-gray-800 font-jp">Part 2: What I Learned / Discovered 🍵</h2>
+                    <!-- Younger Learners Level Selector -->
+                    <div class="bg-pink-100 p-1.5 rounded-xl flex items-center gap-1 border border-pink-200">
+                        <button onclick="setLearnedMode('manabimashita')" id="mode-btn-manabi" class="bg-pink-500 text-white font-bold px-3 py-1 rounded-lg text-xs transition">
+                            Standard
+                        </button>
+                        <button onclick="setLearnedMode('shirimashita')" id="mode-btn-shiri" class="text-pink-700 font-bold px-3 py-1 rounded-lg text-xs transition">
+                            Younger Learners
+                        </button>
+                    </div>
+                </div>
+                <p class="text-gray-500 text-sm mt-1">
+                    Tell your peers about the exciting things you learned or discovered. Standard pattern uses: <strong>にほんで ______ を まなびました (manabimashita)</strong>. Junior pattern uses: <strong>にほんの ______ を しりました (shirimashita)</strong>.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    <div class="space-y-2">
+                        <button onclick="selectLearned('ちゃどう', 'Tea Ceremony (ちゃどう)')" class="learned-btn w-full text-left p-3 rounded-xl bg-pink-100/30 border-2 border-pink-400 transition-all flex justify-between items-center shadow-sm">
+                            <span class="font-bold text-sm">🍵 Tea Ceremony (ちゃどう)</span>
+                            <span class="bg-pink-100 p-1 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectLearned('にほんぶんか', 'Japanese Culture (にほんぶんか)')" class="learned-btn w-full text-left p-3 rounded-xl bg-white border border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <span class="font-bold text-sm">🎎 Japanese Culture (にほんぶんか)</span>
+                            <span class="bg-pink-100 p-1 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectLearned('おもてなし', 'Hospitality/Omotenashi (おもてなし)')" class="learned-btn w-full text-left p-3 rounded-xl bg-white border border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <span class="font-bold text-sm">🤝 Hospitality (おもてなし)</span>
+                            <span class="bg-pink-100 p-1 rounded-full text-xs">🔊</span>
+                        </button>
+                        <button onclick="selectLearned('がっこうせいかつ', 'School Life (がっこうせいかつ)')" class="learned-btn w-full text-left p-3 rounded-xl bg-white border border-pink-100 hover:border-pink-300 transition-all flex justify-between items-center shadow-sm">
+                            <span class="font-bold text-sm">🎒 School Life (がっこうせいかつ)</span>
+                            <span class="bg-pink-100 p-1 rounded-full text-xs">🔊</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-amber-50/50 p-5 rounded-2xl border border-amber-200 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-amber-700 uppercase" id="learned-box-header">Selected Lesson Learned:</span>
+                            <p class="text-xl font-bold font-jp text-amber-900 mt-3" id="practice-learned-output">にほんで ちゃどう を まなびました。</p>
+                            <p class="text-xs text-amber-700/80 italic mt-1" id="practice-learned-romaji">Nihon de chadou o manabimashita.</p>
+                        </div>
+                        <button onclick="playCustomLearnedPhrase()" class="w-full mt-4 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 rounded-xl shadow transition flex items-center justify-center gap-1.5">🔊 <span>Play Statement</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== LESSON 6 TAB (SPEECH FESTIVAL) ==================== -->
+        <div id="content-lesson6" class="tab-content hidden space-y-6">
+            <!-- Interactive Speech Builder -->
+            <div class="bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 p-1.5 rounded-3xl shadow-xl">
+                <div class="bg-white p-6 rounded-[22px]">
+                    <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2.5 py-1 rounded-md">Lesson 6: Speech Festival Builder</span>
+                    <h2 class="text-2xl font-extrabold mt-2 text-gray-800 font-jp">🎤 Create Your Custom Japanese Self-Introduction Speech! 🇮🇳🤝🇯🇵</h2>
+                    <p class="text-gray-500 text-sm mt-1">Adjust the options below to automatically compile, listen, practice, and prepare for your presentation!</p>
+
+                    <!-- Input form configuration grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 p-4 bg-pink-50/40 rounded-2xl border border-pink-100">
+                        <!-- Left inputs -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Your Name (Katakana or English)</label>
+                                <input type="text" id="sb-name" value="プリアンシャ" oninput="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl font-jp text-sm focus:outline-pink-400">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Your Country</label>
+                                <select id="sb-country" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="インド">India (インド)</option>
+                                    <option value="アメリカ">USA (アメリカ)</option>
+                                    <option value="イギリス">UK (イギリス)</option>
+                                    <option value="アイルランド">Ireland (アイルランド)</option>
+                                    <option value="オーストラリア">Australia (オーストラリア)</option>
+                                    <option value="カナダ">Canada (カナダ)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Your Age (10 to 20)</label>
+                                <select id="sb-age" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="じゅうご">15 (じゅうご)</option>
+                                    <option value="じゅうろく">16 (じゅうろく)</option>
+                                    <option value="じゅうなな">17 (じゅうなな)</option>
+                                    <option value="じゅうはち">18 (じゅうはち)</option>
+                                    <option value="じゅうきゅう">19 (じゅうきゅう)</option>
+                                    <option value="はたち">20 (はたち)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Middle inputs -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Your School Grade</label>
+                                <select id="sb-grade" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="こうこう いちねんせい">High School 1st Year (こうこう いちねんせい)</option>
+                                    <option value="こうこう にねんせい" selected>High School 2nd Year (こうこう にねんせい)</option>
+                                    <option value="ちゅうがく さんねんせい">Junior High 3rd Year (ちゅうがく さんねんせい)</option>
+                                    <option value="こうこう さんねんせい">High School 3rd Year (こうこう さんねんせい)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Hobbies</label>
+                                <select id="sb-hobby" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="おんがく と ダンス">Music & Dance (おんがく と ダンス)</option>
+                                    <option value="サッカー">Soccer (サッカー)</option>
+                                    <option value="どくしょ">Reading (どくしょ)</option>
+                                    <option value="えいが">Movies (えいが)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Favorite Food / Likes</label>
+                                <select id="sb-likes" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="カレー と アニメ">Curry & Anime (カレー と アニメ)</option>
+                                    <option value="にほんりょうり">Japanese Cuisine (にほんりょうり)</option>
+                                    <option value="サッカー と アニメ">Soccer & Anime (サッカー と アニメ)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Right inputs -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Dislikes</label>
+                                <select id="sb-dislikes" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="なっとう">Natto (なっとう)</option>
+                                    <option value="テスト">Tests (テスト)</option>
+                                    <option value="からいもの">Spicy food (からいもの)</option>
+                                    <option value="おそおき">Waking up late (おそおき)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Future Career Goal</label>
+                                <select id="sb-career" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="エンジニア">Engineer (エンジニア)</option>
+                                    <option value="いしゃ">Doctor (いしゃ)</option>
+                                    <option value="かがくしゃ">Scientist (かがくしゃ)</option>
+                                    <option value="パイロット">Pilot (パイロット)</option>
+                                    <option value="せんせい">Teacher (せんせい)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-600 uppercase">Lessons / Discoveries</label>
+                                <select id="sb-learned" onchange="buildCustomSpeech()" class="w-full mt-1 px-3 py-2 bg-white border border-pink-200 rounded-xl text-sm focus:outline-pink-400">
+                                    <option value="ちゃどう や にほんぶんか">Tea Ceremony & Culture</option>
+                                    <option value="おモテなし と にほんぶんか">Hospitality & Culture</option>
+                                    <option value="にほんの がっこうせいかつ">Japanese School Life</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generated speech box output -->
+                    <div class="mt-6 border-4 border-dashed border-pink-200 rounded-3xl p-6 bg-gradient-to-r from-pink-50/50 to-amber-50/50 relative">
+                        <div class="absolute top-4 right-4 flex gap-2 z-30">
+                            <button onclick="playFullSpeech()" class="bg-rose-500 hover:bg-rose-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition flex items-center gap-1.5">
+                                🔊 Play Full Speech
+                            </button>
+                            <button onclick="stopSpeech()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold px-4 py-2 rounded-xl text-xs shadow-md transition flex items-center gap-1.5">
+                                ⏹️ Stop
+                            </button>
+                        </div>
+                        
+                        <h3 class="font-extrabold text-pink-700 text-lg mb-4">📜 Your Japanese Speech Draft</h3>
+                        
+                        <!-- Speech text container -->
+                        <div class="space-y-4 max-h-96 overflow-y-auto pr-2 pt-10 md:pt-4" id="speech-draft-container">
+                            <!-- Populated dynamically by buildCustomSpeech() -->
+                        </div>
+                    </div>
+
+                    <!-- Tips for speech festival day -->
+                    <div class="mt-6 p-4 rounded-2xl bg-amber-50 border border-amber-200">
+                        <h4 class="font-bold text-amber-800 text-sm">💡 Potential Speech Festival Q&A preparation:</h4>
+                        <p class="text-xs text-amber-700 mt-1">Japanese students might ask you these questions. Click to practice listening to the question and plan your answers!</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                            <div class="bg-white p-3 rounded-xl border border-amber-100 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-400 font-bold uppercase">Question 1</p>
+                                    <p class="text-sm font-bold font-jp text-gray-800">しゅみは なんですか。</p>
+                                    <p class="text-[10px] text-gray-500 italic">What is your hobby?</p>
+                                </div>
+                                <button onclick="speakJapanese('しゅみはなんですか。')" class="bg-pink-100 text-pink-600 p-2.5 rounded-full hover:bg-pink-200 transition">🔊</button>
+                            </div>
+
+                            <div class="bg-white p-3 rounded-xl border border-amber-100 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-400 font-bold uppercase">Question 2</p>
+                                    <p class="text-sm font-bold font-jp text-gray-800">にほんの たべものは どうですか。</p>
+                                    <p class="text-[10px] text-gray-500 italic">How is Japanese food?</p>
+                                </div>
+                                <button onclick="speakJapanese('にほんのたべものはどうですか。')" class="bg-pink-100 text-pink-600 p-2.5 rounded-full hover:bg-pink-200 transition">🔊</button>
+                            </div>
+
+                            <div class="bg-white p-3 rounded-xl border border-amber-100 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-400 font-bold uppercase">Question 3</p>
+                                    <p class="text-sm font-bold font-jp text-gray-800">にほんで なにを まなびましたか。</p>
+                                    <p class="text-[10px] text-gray-500 italic">What did you learn in Japan?</p>
+                                </div>
+                                <button onclick="speakJapanese('にほんでなにをまなびましたか。')" class="bg-pink-100 text-pink-600 p-2.5 rounded-full hover:bg-pink-200 transition">🔊</button>
+                            </div>
+
+                            <div class="bg-white p-3 rounded-xl border border-amber-100 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-400 font-bold uppercase">Question 4</p>
+                                    <p class="text-sm font-bold font-jp text-gray-800">しょうらい なにに なりたいですか。</p>
+                                    <p class="text-[10px] text-gray-500 italic">What do you want to become in the future?</p>
+                                </div>
+                                <button onclick="speakJapanese('しょうらいなにになりたいですか。')" class="bg-pink-100 text-pink-600 p-2.5 rounded-full hover:bg-pink-200 transition">🔊</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== WORKSHEETS TAB ==================== -->
+        <!-- In-app view. Clicking this page gives teachers and students printable sheets. -->
+        <div id="content-worksheets" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 shadow-md border-2 border-pink-100">
+                <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2.5 py-1 rounded-md">Teachers & Students Resource Hub</span>
+                <h2 class="text-2xl font-extrabold mt-2 text-gray-800 font-jp">🖨️ Printable Worksheets Hub</h2>
+                <p class="text-gray-500 text-sm mt-1">This module formats complete printable homework activity pages, cut-out vocabulary cards, and a Speech Festival grading rubric for teachers! Just press the green button below to bring up your device's physical printing box.</p>
+
+                <div class="mt-4 flex gap-3 flex-wrap">
+                    <button onclick="printAppWorksheets()" class="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                        🖨️ Print Resources & Worksheets
+                    </button>
+                    <p class="text-xs text-gray-400 max-w-sm self-center">Optimized for Letter/A4 portrait format directly. It will only print the cleanly styled black and white educational worksheets below!</p>
+                </div>
+            </div>
+
+            <!-- Preview of the worksheets inside app -->
+            <div class="bg-gray-100 rounded-3xl p-6 border-2 border-gray-300 space-y-8">
+                <h3 class="text-lg font-bold text-gray-700">👀 Preview of Printable Worksheets (Scroll below to review)</h3>
+                
+                <!-- Inner container displaying worksheets neatly -->
+                <div class="bg-white p-8 max-w-4xl mx-auto shadow-lg border border-gray-300 space-y-12">
+                    <p class="text-xs text-center text-gray-400 uppercase italic">--- Beginning of Printable Content ---</p>
+                    
+                    <!-- Worksheet 1 Header -->
+                    <div class="border-b-4 border-black pb-4 text-center">
+                        <h1 class="text-2xl font-black uppercase tracking-wide font-jp">Sakura Bridges Educational Program 🌸</h1>
+                        <p class="text-sm font-bold mt-1">Indian Exchange Students in Japan: Self-Introduction Worksheet</p>
+                        <div class="flex justify-between mt-4 text-xs font-semibold">
+                            <span>STUDENT NAME: ____________________________</span>
+                            <span>DATE: __________________</span>
+                        </div>
+                    </div>
+
+                    <!-- Part 1 Content -->
+                    <div class="space-y-4">
+                        <h2 class="text-md font-bold uppercase bg-black text-white px-2 py-1">Exercise 1: Basic Introduction Matching</h2>
+                        <p class="text-xs text-gray-600">Draw a line connecting the correct Japanese greeting phrase on the left with its English meaning and Romaji representation on the right!</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-xs font-jp p-2">
+                            <div class="space-y-4">
+                                <p>1. こんにちは (Konnichiwa)  ─────────</p>
+                                <p>2. はじめまして (Hajimemashite)  ─────────</p>
+                                <p>3. よろしくおねがいします (Yoroshiku...)  ─────</p>
+                            </div>
+                            <div class="space-y-4 font-sans">
+                                <p>A. Nice to meet you (Beginning of speech)</p>
+                                <p>B. Hello / Good afternoon</p>
+                                <p>C. Please treat me kindly / Nice to meet you (Closing)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Part 2 Content -->
+                    <div class="space-y-4">
+                        <h2 class="text-md font-bold uppercase bg-black text-white px-2 py-1">Exercise 2: Fill-in-the-Blank Profile Script</h2>
+                        <p class="text-xs text-gray-600">Fill in the blanks using Hiragana, Katakana, or Romaji based on the patterns learned in class!</p>
+                        
+                        <div class="space-y-4 font-jp text-sm p-2 leading-loose">
+                            <div>
+                                <p class="font-bold">1. Name introduction sentence:</p>
+                                <p class="text-gray-400">わたしは ________________________ です。</p>
+                                <p class="text-xs text-gray-500 font-sans italic">Example: わたしは プリアンシャ です (I am Priyansha).</p>
+                            </div>
+                            <div>
+                                <p class="font-bold">2. Country introduction sentence:</p>
+                                <p class="text-gray-400">________________________ から きました。</p>
+                                <p class="text-xs text-gray-500 font-sans italic">Example: インド から きました (I came from India).</p>
+                            </div>
+                            <div>
+                                <p class="font-bold">3. Age introduction sentence (10-20):</p>
+                                <p class="text-gray-400">________________________ さい です。</p>
+                                <p class="text-xs text-gray-500 font-sans italic">Example: じゅうご さい です (I am 15 years old).</p>
+                            </div>
+                            <div>
+                                <p class="font-bold">4. School grade introduction sentence:</p>
+                                <p class="text-gray-400">________________________ ねんせい です。</p>
+                                <p class="text-xs text-gray-500 font-sans italic">Example: こうこう にねんせい です (I am high school 2nd year).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Worksheet 2: Vocab Flashcards -->
+                    <div class="page-break-before space-y-4 pt-8 border-t-2 border-dashed border-gray-400">
+                        <div class="text-center">
+                            <h2 class="text-lg font-bold uppercase tracking-wider">✂️ Vocabulary Cut-Out Flashcards</h2>
+                            <p class="text-xs text-gray-500 mt-1">Teachers can print, cut along dotted lines, fold over to make flashcards!</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Card 1 -->
+                            <div class="border-2 border-dashed border-gray-600 p-4 rounded text-center">
+                                <span class="text-xs font-bold block uppercase border-b pb-1 text-gray-400">FRONT</span>
+                                <h3 class="text-2xl font-black font-jp my-3">インド</h3>
+                                <p class="text-xs text-gray-500 font-sans italic">Romaji: Indo</p>
+                            </div>
+                            <!-- Card 1 Back -->
+                            <div class="border-2 border-dashed border-gray-600 p-4 rounded text-center bg-gray-50">
+                                <span class="text-xs font-bold block uppercase border-b pb-1 text-gray-400">BACK</span>
+                                <h3 class="text-2xl font-black font-sans my-3">India</h3>
+                                <p class="text-xs text-gray-500 italic">Origin Country of Student</p>
+                            </div>
+
+                            <!-- Card 2 -->
+                            <div class="border-2 border-dashed border-gray-600 p-4 rounded text-center">
+                                <span class="text-xs font-bold block uppercase border-b pb-1 text-gray-400">FRONT</span>
+                                <h3 class="text-2xl font-black font-jp my-3">しゅみ</h3>
+                                <p class="text-xs text-gray-500 font-sans italic">Romaji: Shumi</p>
+                            </div>
+                            <!-- Card 2 Back -->
+                            <div class="border-2 border-dashed border-gray-600 p-4 rounded text-center bg-gray-50">
+                                <span class="text-xs font-bold block uppercase border-b pb-1 text-gray-400">BACK</span>
+                                <h3 class="text-2xl font-black font-sans my-3">Hobby</h3>
+                                <p class="text-xs text-gray-500 italic">Favorite Activity / Pastime</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Rubric for Teacher -->
+                    <div class="page-break-before space-y-4 pt-8 border-t-2 border-dashed border-gray-400">
+                        <div class="text-center">
+                            <h2 class="text-lg font-bold uppercase tracking-wider">👩‍🏫 "Speech Festival" Evaluation Rubric</h2>
+                            <p class="text-xs text-gray-500 mt-1">A simple grading tool for Japanese host school teachers to score presentations.</p>
+                        </div>
+
+                        <table class="w-full border-collapse border border-black text-xs">
+                            <thead>
+                                <tr class="bg-black text-white">
+                                    <th class="border border-black p-2 text-left">Criteria</th>
+                                    <th class="border border-black p-2 text-center">Excellent (5 pts)</th>
+                                    <th class="border border-black p-2 text-center">Good (3-4 pts)</th>
+                                    <th class="border border-black p-2 text-center">Needs Practice (1-2 pts)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-black p-2 font-bold">Vocabulary Pronunciation</td>
+                                    <td class="border border-black p-2">Accurate vowels, clear syllables</td>
+                                    <td class="border border-black p-2">Understandable with slight errors</td>
+                                    <td class="border border-black p-2">Needs helper/translation guide</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-2 font-bold">Structure & Content</td>
+                                    <td class="border border-black p-2">Includes all 12 lesson requirements</td>
+                                    <td class="border border-black p-2">Missing 1-2 elements</td>
+                                    <td class="border border-black p-2">Incomplete introduction draft</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-black p-2 font-bold">Etiquette & Bowing</td>
+                                    <td class="border border-black p-2">Perfect posture, bows appropriately</td>
+                                    <td class="border border-black p-2">Bows correctly but forgets timing</td>
+                                    <td class="border border-black p-2">No bowing posture at finish</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="text-xs text-center text-gray-400 uppercase italic">--- End of Printable Content ---</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- HIDDEN FULLY FORMATTED PRINT CONTAINER (Only shown on physical print output!) -->
+    <div id="print-sheet-box" class="print-only hidden p-8 max-w-4xl mx-auto space-y-12">
+        <div class="border-b-4 border-black pb-4 text-center">
+            <h1 class="text-2xl font-black uppercase tracking-wide">Sakura Bridges Educational Program 🌸</h1>
+            <p class="text-sm font-bold mt-1">Indian Exchange Students Japanese Introduction Worksheet</p>
+            <div class="flex justify-between mt-4 text-xs font-semibold">
+                <span>STUDENT NAME: ____________________________</span>
+                <span>DATE: __________________</span>
+            </div>
+        </div>
+
+        <!-- Exercise 1 -->
+        <div class="space-y-4">
+            <h2 class="text-md font-bold uppercase bg-black text-white px-2 py-1">Exercise 1: Vocabulary & Matching</h2>
+            <p class="text-xs text-gray-600">Draw a line connecting the correct Japanese phrase with its English meaning:</p>
+            <div class="grid grid-cols-2 gap-4 text-xs font-jp p-2">
+                <div class="space-y-4">
+                    <p>1. こんにちは (Konnichiwa) ──────────────────</p>
+                    <p>2. はじめまして (Hajimemashite) ───────────────</p>
+                    <p>3. よろしくおねがいします (Yoroshiku...) ────────</p>
+                    <p>4. わたしは ______ です (Watashi wa... desu) ───────</p>
+                </div>
+                <div class="space-y-4 font-sans">
+                    <p>A. Nice to meet you (Greeting)</p>
+                    <p>B. Hello / Good day</p>
+                    <p>C. Please treat me kindly (Concluding phrase)</p>
+                    <p>D. My name is ______.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 2 -->
+        <div class="space-y-4">
+            <h2 class="text-md font-bold uppercase bg-black text-white px-2 py-1">Exercise 2: Write Your Own Speech Draft</h2>
+            <p class="text-xs text-gray-600">Use the templates provided to write out your own spoken presentation draft physically!</p>
+            <div class="space-y-6 font-jp text-sm p-2">
+                <div>
+                    <p class="font-bold">1. Introduction Greeting:</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">はじめまして。</p>
+                </div>
+                <div>
+                    <p class="font-bold">2. Name introduction sentence (わたしは ______ です):</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">わたしは __________________________________ です。</p>
+                </div>
+                <div>
+                    <p class="font-bold">3. Origin Country introduction (______ から きました):</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">__________________________________ から きました。</p>
+                </div>
+                <div>
+                    <p class="font-bold">4. Age introduction (______ さい です):</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">__________________________________ さい です。</p>
+                </div>
+                <div>
+                    <p class="font-bold">5. School Grade introduction (______ ねんせい です):</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">__________________________________ ねんせい です。</p>
+                </div>
+                <div>
+                    <p class="font-bold">6. Hobbies & Likes (しゅみは ______ です):</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">しゅみ は __________________________________ です。</p>
+                </div>
+                <div>
+                    <p class="font-bold">7. Future Goals (しょうらい ______ に なりたいです):</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">しょうらい __________________________________ に なりたいです。</p>
+                </div>
+                <div>
+                    <p class="font-bold">8. Closing greeting (よろしく おねがいします):</p>
+                    <p class="text-gray-400 py-2 border-b border-dashed border-gray-400">よろしく おねがいします。ありがとうございました。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher's evaluation sheet -->
+        <div class="page-break-before space-y-4 pt-8 border-t-2 border-black">
+            <h2 class="text-md font-bold uppercase bg-black text-white px-2 py-1 text-center">🏫 Teacher's Speech Evaluation Rubric</h2>
+            <p class="text-xs text-center text-gray-500">Grading card for evaluation on Speech Festival day.</p>
+            <table class="w-full border-collapse border border-black text-xs">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border border-black p-2 text-left">Skill Component</th>
+                        <th class="border border-black p-2 text-center">Score (1-5)</th>
+                        <th class="border border-black p-2 text-left">Teacher's Note / Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="border border-black p-2 font-bold">1. Greeting & Closing bow</td>
+                        <td class="border border-black p-2 text-center">___ / 5</td>
+                        <td class="border border-black p-2">_______________________________________________</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-black p-2 font-bold">2. Name & Age Pronunciation</td>
+                        <td class="border border-black p-2 text-center">___ / 5</td>
+                        <td class="border border-black p-2">_______________________________________________</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-black p-2 font-bold">3. Future Dreams (しょうらい...)</td>
+                        <td class="border border-black p-2 text-center">___ / 5</td>
+                        <td class="border border-black p-2">_______________________________________________</td>
+                    </tr>
+                    <tr>
+                        <td class="border border-black p-2 font-bold">4. Fluency & Confidence</td>
+                        <td class="border border-black p-2 text-center">___ / 5</td>
+                        <td class="border border-black p-2">_______________________________________________</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script tag containing the app logic & layout functions -->
+    <script>
+        // Global State variables
+        let isJapaneseUI = false;
+        let isSakuraEnabled = true;
+        let selectedLearnedMode = "manabimashita"; // manabimashita or shirimashita
+        
+        // Practice states
+        let selectedCountryVal = "インド";
+        let selectedCountryLabel = "India";
+        let selectedAgeNum = 15;
+        let selectedAgeLabel = "じゅうご";
+        let selectedGradeVal = "こうこう にねんせい";
+        let selectedGradeLabel = "High School Year 2";
+        let selectedFamilyCount = 5;
+        let hasSister = false;
+        let hasBrother = false;
+        let selectedHobbyVal = "おんがく";
+        let selectedHobbyLabel = "Music";
+        let selectedLikeVal = "カレー";
+        let selectedLikeLabel = "Curry";
+        let selectedDislikeVal = "なっとう";
+        let selectedDislikeLabel = "Natto (Fermented Soybeans)";
+        let selectedUniVal = "とうきょうだいがく";
+        let selectedUniLabel = "University of Tokyo";
+        let selectedCareerVal = "エンジニア";
+        let selectedCareerLabel = "Engineer";
+        let selectedImpressionVal = "きれいです";
+        let selectedImpressionLabel = "Beautiful (きれいです)";
+        let selectedLearnedVal = "ちゃどう";
+        let selectedLearnedLabel = "Tea Ceremony";
+
+        // Speech Synthesis controller elements
+        let synth = window.speechSynthesis;
+        let speechQueue = [];
+        let speechQueueIndex = 0;
+        let isSpeakingQueue = false;
+
+        // Clean up synthesis queues
+        if (synth) {
+            synth.cancel();
+        }
+
+        // Keep a strong reference of voices array for iOS / Safari
+        let availableVoices = [];
+        function loadVoices() {
+            if (synth) {
+                availableVoices = synth.getVoices();
+                const jaVoice = availableVoices.find(voice => voice.lang.includes('ja') || voice.lang.startsWith('ja_'));
+                const statusEl = document.getElementById('audio-status');
+                if (statusEl) {
+                    if (jaVoice) {
+                        statusEl.textContent = "Audio Engine (JP Native) Active";
+                        statusEl.className = "text-xs font-bold text-emerald-100 flex items-center gap-2";
+                    } else {
+                        statusEl.textContent = "Audio Engine (TTS) Active";
+                    }
+                }
+            }
+        }
+        
+        if (synth && synth.onvoiceschanged !== undefined) {
+            synth.onvoiceschanged = loadVoices;
+        }
+        setTimeout(loadVoices, 800); // Failsafe for instant voice retrieval
+
+        // Sakura Petal Falling Animation Logic
+        const sakuraContainer = document.getElementById('sakura-bg');
+        const totalPetals = 16;
+
+        function createPetal() {
+            if (!isSakuraEnabled) return;
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            
+            // Random attributes
+            const size = Math.random() * 8 + 8; // 8 to 16px
+            const left = Math.random() * window.innerWidth;
+            const delay = Math.random() * 5;
+            const duration = Math.random() * 8 + 6; // 6 to 14s
+
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${left}px`;
+            petal.style.top = `-20px`;
+            petal.style.animationName = 'fall';
+            petal.style.animationDuration = `${duration}s`;
+            petal.style.animationDelay = `${delay}s`;
+
+            sakuraContainer.appendChild(petal);
+
+            // Recycle petal
+            setTimeout(() => {
+                petal.remove();
+                if (isSakuraEnabled) createPetal();
+            }, (duration + delay) * 1000);
+        }
+
+        // Initialize falling petals
+        for (let i = 0; i < totalPetals; i++) {
+            createPetal();
+        }
+
+        function toggleSakuraAnimation() {
+            isSakuraEnabled = !isSakuraEnabled;
+            const toggleBtn = document.getElementById('sakura-toggle-text');
+            if (isSakuraEnabled) {
+                toggleBtn.textContent = "Disable Sakura Effect";
+                for (let i = 0; i < totalPetals; i++) {
+                    createPetal();
+                }
+            } else {
+                toggleBtn.textContent = "Enable Sakura Effect";
+                sakuraContainer.innerHTML = '';
+            }
+        }
+
+        // Bilingual UI Localization Dictionary
+        const localizeDict = {
+            en: {
+                "dash-welcome-title": "Welcome to Japan, Dear Friends! 🌸",
+                "dash-welcome-desc": "This app is specially crafted for Indian exchange students in Japan. Our goal is to prepare you for the 'Japanese Speech Festival'. By finishing these 6 short lessons, you'll be able to introduce yourself beautifully, discuss your hobbies, explain your impressions of beautiful Japan, and talk about your future dreams in perfect Japanese!",
+                "dash-curriculum-title": "Your Japanese Learning Journey",
+                "lang-btn-text": "Switch to Japanese UI"
+            },
+            jp: {
+                "dash-welcome-title": "日本へようこそ、インドの学生の皆さん！🌸",
+                "dash-welcome-desc": "このアプリは、日本を訪れるインド人交換留学生のために作られました。私たちの目標は「日本語スピーチフェスティバル」に向けての準備です。6つの簡単なレッスンを修了することで、自己紹介、趣味、日本への印象、将来の夢について、美しい日本語で発表できるようになります！",
+                "dash-curriculum-title": "日本語学習のロードマップ",
+                "lang-btn-text": "Switch to English UI"
+            }
+        };
+
+        // Switch Tab Logic
+        function switchTab(tabName) {
+            // Remove active style from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+            });
+
+            // Hide all tab content boxes
+            document.querySelectorAll('.tab-content').forEach(box => {
+                box.classList.add('hidden');
+                box.classList.remove('block');
+            });
+
+            // Activate chosen tab
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            const activeContent = document.getElementById(`content-${tabName}`);
+            
+            if (activeBtn) activeBtn.classList.add('tab-active');
+            if (activeContent) {
+                activeContent.classList.remove('hidden');
+                activeContent.classList.add('block');
+            }
+
+            // Stop any playing sound on tab change
+            stopSpeech();
+
+            // If entering lesson 6, build default speech script dynamically
+            if (tabName === 'lesson6') {
+                buildCustomSpeech();
+            }
+        }
+
+        // Toggle UI Language Globally (Bilingual translation mechanism)
+        function toggleGlobalLanguage() {
+            isJapaneseUI = !isJapaneseUI;
+            const activeLang = isJapaneseUI ? 'jp' : 'en';
+
+            // Apply translations to localized fields
+            for (const key in localizeDict[activeLang]) {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.innerHTML = localizeDict[activeLang][key];
+                }
+            }
+
+            // Update UI Flag Icon and indicator text
+            const flagBtn = document.getElementById('lang-btn-flag');
+            if (flagBtn) flagBtn.innerHTML = isJapaneseUI ? '🇮🇳' : '🌐';
+        }
+
+        /**
+         * Core Text-to-Speech (TTS) Voice Engine
+         * Built to resolve iOS and Mobile Chrome lockups
+         */
+        function speakJapanese(text) {
+            if (!synth) {
+                console.warn("Speech Synthesis not supported by this browser.");
+                return;
+            }
+
+            // Halt current queues immediately
+            isSpeakingQueue = false;
+            speechQueue = [];
+            synth.cancel();
+
+            // Mobile compatibility workaround: Safari can lock if synthesizer state is paused
+            if (synth.paused) {
+                synth.resume();
+            }
+
+            // Clean up emojis/unsupported characters from the spoken string to prevent pronunciation errors
+            let cleanText = text.replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, '');
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            utterance.lang = 'ja-JP';
+            utterance.rate = 0.85; // Natural speed for international learners
+
+            // Assign native Japanese voice
+            if (availableVoices.length === 0) {
+                availableVoices = synth.getVoices();
+            }
+            const jaVoice = availableVoices.find(voice => voice.lang.includes('ja') || voice.lang.startsWith('ja_'));
+            if (jaVoice) {
+                utterance.voice = jaVoice;
+            }
+
+            utterance.onerror = function(event) {
+                console.error("Speech Synthesis Utterance Error:", event);
+            };
+
+            synth.speak(utterance);
+        }
+
+        /**
+         * Stop Speech Helper
+         */
+        function stopSpeech() {
+            isSpeakingQueue = false;
+            speechQueue = [];
+            if (synth) {
+                synth.cancel();
+            }
+        }
+
+        /**
+         * Queue based play for whole paragraph speech assembly
+         * Resolves the "random cutoff mid-paragraph" bug found on mobile Safari.
+         */
+        function playSpeechInQueue(sentences) {
+            if (!synth) return;
+            synth.cancel();
+            
+            speechQueue = sentences.map(s => s.replace(/[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF]/g, ''));
+            speechQueueIndex = 0;
+            isSpeakingQueue = true;
+            
+            speakNextQueuedSentence();
+        }
+
+        function speakNextQueuedSentence() {
+            if (!isSpeakingQueue || speechQueueIndex >= speechQueue.length) {
+                isSpeakingQueue = false;
+                return;
+            }
+
+            const sentenceText = speechQueue[speechQueueIndex];
+            const utterance = new SpeechSynthesisUtterance(sentenceText);
+            utterance.lang = 'ja-JP';
+            utterance.rate = 0.82;
+
+            if (availableVoices.length === 0) {
+                availableVoices = synth.getVoices();
+            }
+            const jaVoice = availableVoices.find(voice => voice.lang.includes('ja') || voice.lang.startsWith('ja_'));
+            if (jaVoice) {
+                utterance.voice = jaVoice;
+            }
+
+            utterance.onend = function() {
+                speechQueueIndex++;
+                speakNextQueuedSentence();
+            };
+
+            utterance.onerror = function() {
+                // Skip broken line and continue
+                speechQueueIndex++;
+                speakNextQueuedSentence();
+            };
+
+            synth.speak(utterance);
+        }
+
+        // Interactive states update functions
+        function selectCountry(kana, english) {
+            selectedCountryVal = kana;
+            selectedCountryLabel = english;
+
+            // Update display card
+            document.getElementById('practice-country-output').textContent = `${kana} から きました。`;
+            document.getElementById('practice-country-romaji').textContent = `${english} kara kimashita.`;
+
+            // Highlight chosen button
+            document.querySelectorAll('.country-btn').forEach(btn => {
+                btn.classList.remove('border-pink-500', 'bg-pink-100/50');
+                btn.classList.add('border-pink-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-pink-500', 'bg-pink-100/50');
+            event.currentTarget.classList.remove('border-pink-100', 'bg-white');
+            
+            playCustomCountryPhrase();
+        }
+
+        function playCustomCountryPhrase() {
+            speakJapanese(`${selectedCountryVal}からきました。`);
+        }
+
+        function updatePracticeName() {
+            const val = document.getElementById('practice-name-input').value || "プリアンシャ";
+            document.getElementById('practice-name-output').textContent = `わたしは ${val} です。`;
+        }
+
+        function playCustomNamePhrase() {
+            const nameVal = document.getElementById('practice-name-input').value || "プリアンシャ";
+            speakJapanese(`わたしは ${nameVal} です。`);
+        }
+
+        function selectAge(num, kana) {
+            selectedAgeNum = num;
+            selectedAgeLabel = kana;
+
+            document.getElementById('selected-age-num').textContent = num;
+            document.getElementById('practice-age-output').textContent = `${kana} さい です。`;
+            document.getElementById('practice-age-romaji').textContent = `${kana} sai desu.`;
+
+            // Highlight chosen button
+            document.querySelectorAll('.age-btn').forEach(btn => {
+                btn.classList.remove('bg-pink-200', 'border-pink-400');
+                btn.classList.add('bg-white', 'border-pink-100');
+            });
+            event.currentTarget.classList.add('bg-pink-200', 'border-pink-400');
+            event.currentTarget.classList.remove('bg-white', 'border-pink-100');
+
+            playCustomAgePhrase();
+        }
+
+        function playCustomAgePhrase() {
+            speakJapanese(`${selectedAgeLabel}さいです。`);
+        }
+
+        function selectGrade(kana, english) {
+            selectedGradeVal = kana;
+            selectedGradeLabel = english;
+
+            document.getElementById('selected-grade-label').textContent = english;
+            document.getElementById('practice-grade-output').textContent = `${kana} です。`;
+            document.getElementById('practice-grade-romaji').textContent = `${kana} desu.`;
+
+            // Highlight chosen button
+            document.querySelectorAll('.grade-btn').forEach(btn => {
+                btn.classList.remove('border-pink-400', 'bg-pink-100/30');
+            });
+            event.currentTarget.classList.add('border-pink-400', 'bg-pink-100/30');
+
+            speakJapanese(`${kana}です。`);
+        }
+
+        function adjustFamilyCount(delta) {
+            selectedFamilyCount += delta;
+            if (selectedFamilyCount < 1) selectedFamilyCount = 1;
+            if (selectedFamilyCount > 10) selectedFamilyCount = 10;
+
+            document.getElementById('family-count-display').textContent = selectedFamilyCount;
+
+            // Convert family counts to JP phonetics helper
+            const jpNumberPhonetics = ["れい", "ひとり", "ふたり", "さんにん", "よにん", "ごにん", "ろくにん", "しちにん", "はちにん", "きゅうにん", "じゅうにん"];
+            const currentPhonetics = jpNumberPhonetics[selectedFamilyCount];
+
+            document.getElementById('practice-family-output').textContent = `かぞくは ${selectedFamilyCount}にんです。`;
+            document.getElementById('practice-family-romaji').textContent = `Kazoku wa ${currentPhonetics} desu.`;
+        }
+
+        function toggleSibling(type) {
+            if (type === 'sister') {
+                hasSister = !hasSister;
+                const btn = document.getElementById('sibling-btn-sister');
+                if (hasSister) {
+                    btn.classList.add('border-pink-500', 'bg-pink-100/30');
+                } else {
+                    btn.classList.remove('border-pink-500', 'bg-pink-100/30');
+                }
+            } else if (type === 'brother') {
+                hasBrother = !hasBrother;
+                const btn = document.getElementById('sibling-btn-brother');
+                if (hasBrother) {
+                    btn.classList.add('border-pink-500', 'bg-pink-100/30');
+                } else {
+                    btn.classList.remove('border-pink-500', 'bg-pink-100/30');
+                }
+            }
+
+            // Build optional phrase block output
+            const extraBox = document.getElementById('sibling-extra-phrase-box');
+            const extraPhraseText = document.getElementById('sibling-extra-phrase');
+
+            if (hasSister || hasBrother) {
+                extraBox.classList.remove('hidden');
+                let sentences = [];
+                if (hasSister) sentences.push("あね が います。(I have an older sister.)");
+                if (hasBrother) sentences.push("おとうと が います。(I have a younger brother.)");
+                extraPhraseText.innerHTML = sentences.join("<br>");
+            } else {
+                extraBox.classList.add('hidden');
+            }
+        }
+
+        function playCustomFamilyPhrase() {
+            const jpNumberPhonetics = ["れい", "ひとり", "ふたり", "さんにん", "よにん", "ごにん", "ろくにん", "しちにん", "はちにん", "きゅうにん", "じゅうにん"];
+            const familyPronounce = jpNumberPhonetics[selectedFamilyCount];
+            let rawText = `かぞくは${familyPronounce}です。`;
+            if (hasSister) rawText += " あねがいます。";
+            if (hasBrother) rawText += " おとうとがいます。";
+            speakJapanese(rawText);
+        }
+
+        // Lesson 3 States & Play
+        function selectHobby(kana, english) {
+            selectedHobbyVal = kana;
+            selectedHobbyLabel = english;
+
+            document.getElementById('practice-hobby-output').textContent = `しゅみ は ${kana} です。`;
+            document.getElementById('practice-hobby-romaji').textContent = `Shumi wa ${kana} desu.`;
+
+            // Highlight chosen button
+            document.querySelectorAll('.hobby-card').forEach(btn => {
+                btn.classList.remove('border-pink-500', 'bg-pink-100/20', 'border-2');
+                btn.classList.add('border-pink-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-pink-500', 'bg-pink-100/20', 'border-2');
+            event.currentTarget.classList.remove('border-pink-100', 'bg-white');
+
+            playCustomHobbyPhrase();
+        }
+
+        function playCustomHobbyPhrase() {
+            // Corrected Hobby bug: Spoken phrase matches selection instead of hardcoded 'ongaku'
+            speakJapanese(`しゅみは${selectedHobbyVal}です。`);
+        }
+
+        function selectLike(kana, english) {
+            selectedLikeVal = kana;
+            selectedLikeLabel = english;
+            document.getElementById('practice-like-output').textContent = `${kana} が すきです。`;
+            
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.classList.remove('border-green-500', 'bg-green-50', 'border-2');
+                btn.classList.add('border-green-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-green-500', 'bg-green-50', 'border-2');
+            event.currentTarget.classList.remove('border-green-100', 'bg-white');
+
+            playCustomLikePhrase();
+        }
+
+        function playCustomLikePhrase() {
+            speakJapanese(`${selectedLikeVal}がすきです。`);
+        }
+
+        function selectDislike(kana, english) {
+            selectedDislikeVal = kana;
+            selectedDislikeLabel = english;
+            document.getElementById('practice-dislike-output').textContent = `${kana} が きらいです。`;
+
+            document.querySelectorAll('.dislike-btn').forEach(btn => {
+                btn.classList.remove('border-red-500', 'bg-red-50', 'border-2');
+                btn.classList.add('border-red-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-red-500', 'bg-red-50', 'border-2');
+            event.currentTarget.classList.remove('border-red-100', 'bg-white');
+
+            playCustomDislikePhrase();
+        }
+
+        function playCustomDislikePhrase() {
+            speakJapanese(`${selectedDislikeVal}がきらいです。`);
+        }
+
+        // Lesson 4 States & Play
+        function selectUni(kana, english) {
+            selectedUniVal = kana;
+            selectedUniLabel = english;
+            document.getElementById('practice-uni-output').textContent = `${kana}に いきたいです。`;
+            document.getElementById('practice-uni-romaji').textContent = `${kana} ni ikitaidesu.`;
+
+            document.querySelectorAll('.uni-btn').forEach(btn => {
+                btn.classList.remove('border-pink-400', 'bg-pink-100/30', 'border-2');
+                btn.classList.add('border-pink-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-pink-400', 'bg-pink-100/30', 'border-2');
+            event.currentTarget.classList.remove('border-pink-100', 'bg-white');
+
+            speakJapanese(`${kana}にいきたいです。`);
+        }
+
+        function playCustomUniPhrase() {
+            speakJapanese(`${selectedUniVal}にいきたいです。`);
+        }
+
+        function selectCareer(kana, english) {
+            selectedCareerVal = kana;
+            selectedCareerLabel = english;
+            document.getElementById('practice-career-output').textContent = `しょうらい ${kana} に なりたいです。`;
+            document.getElementById('practice-career-romaji').textContent = `Shourai ${kana} ni naritaidesu.`;
+
+            document.querySelectorAll('.career-card').forEach(btn => {
+                btn.classList.remove('border-pink-500', 'bg-amber-100/50', 'border-2');
+                btn.classList.add('border-pink-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-pink-500', 'bg-amber-100/50', 'border-2');
+            event.currentTarget.classList.remove('border-pink-100', 'bg-white');
+
+            speakJapanese(`しょうらい${kana}になりたいです。`);
+        }
+
+        function playCustomCareerPhrase() {
+            speakJapanese(`しょうらい ${selectedCareerVal} になりたいです。`);
+        }
+
+        // Lesson 5 States & Play
+        function selectImpression(kana, english) {
+            selectedImpressionVal = kana;
+            selectedImpressionLabel = english;
+
+            // Proper grammar layout checking
+            if (kana === 'にほんのひとはしんせつです') {
+                document.getElementById('practice-imp-output').textContent = `にほんの ひとは しんせつ です。`;
+                document.getElementById('practice-imp-romaji').textContent = `Nihon no hito wa shinsetsu desu.`;
+            } else {
+                document.getElementById('practice-imp-output').textContent = `にほん は ${kana}。`;
+                document.getElementById('practice-imp-romaji').textContent = `Nihon wa ${kana}.`;
+            }
+
+            document.querySelectorAll('.imp-btn').forEach(btn => {
+                btn.classList.remove('border-pink-500', 'bg-pink-100/30', 'border-2');
+                btn.classList.add('border-pink-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-pink-500', 'bg-pink-100/30', 'border-2');
+            event.currentTarget.classList.remove('border-pink-100', 'bg-white');
+
+            playCustomImpPhrase();
+        }
+
+        function playCustomImpPhrase() {
+            if (selectedImpressionVal === 'にほんのひとはしんせつです') {
+                speakJapanese(`にほんのひとはしんせつです。`);
+            } else {
+                speakJapanese(`にほんは${selectedImpressionVal}`);
+            }
+        }
+
+        function setLearnedMode(mode) {
+            selectedLearnedMode = mode;
+            
+            // Toggle highlight styling of level switcher
+            const b1 = document.getElementById('mode-btn-manabi');
+            const b2 = document.getElementById('mode-btn-shiri');
+            if (mode === 'manabimashita') {
+                b1.className = "bg-pink-500 text-white font-bold px-3 py-1 rounded-lg text-xs transition";
+                b2.className = "text-pink-700 font-bold px-3 py-1 rounded-lg text-xs transition";
+                document.getElementById('learned-box-header').textContent = "Selected Lesson Learned:";
+            } else {
+                b1.className = "text-pink-700 font-bold px-3 py-1 rounded-lg text-xs transition";
+                b2.className = "bg-pink-500 text-white font-bold px-3 py-1 rounded-lg text-xs transition";
+                document.getElementById('learned-box-header').textContent = "Selected Lesson Discovered:";
+            }
+
+            // Redraw display immediately
+            updateLearnedOutputText();
+        }
+
+        function selectLearned(kana, english) {
+            selectedLearnedVal = kana;
+            selectedLearnedLabel = english;
+
+            updateLearnedOutputText();
+
+            document.querySelectorAll('.learned-btn').forEach(btn => {
+                btn.classList.remove('border-pink-400', 'bg-pink-100/30', 'border-2');
+                btn.classList.add('border-pink-100', 'bg-white');
+            });
+            event.currentTarget.classList.add('border-pink-400', 'bg-pink-100/30', 'border-2');
+            event.currentTarget.classList.remove('border-pink-100', 'bg-white');
+
+            playCustomLearnedPhrase();
+        }
+
+        function updateLearnedOutputText() {
+            if (selectedLearnedMode === 'manabimashita') {
+                document.getElementById('practice-learned-output').textContent = `にほんで ${selectedLearnedVal} を まなびました。`;
+                document.getElementById('practice-learned-romaji').textContent = `Nihon de ${selectedLearnedVal} o manabimashita.`;
+            } else {
+                document.getElementById('practice-learned-output').textContent = `にほんの ${selectedLearnedVal} を しりました。`;
+                document.getElementById('practice-learned-romaji').textContent = `Nihon no ${selectedLearnedVal} o shirimashita.`;
+            }
+        }
+
+        function playCustomLearnedPhrase() {
+            if (selectedLearnedMode === 'manabimashita') {
+                speakJapanese(`にほんで${selectedLearnedVal}をまなびました。`);
+            } else {
+                speakJapanese(`にほんの${selectedLearnedVal}をしりました。`);
+            }
+        }
+
+        // Lesson 6 - Speech Builder (Aggregator)
+        function buildCustomSpeech() {
+            const name = document.getElementById('sb-name').value || "プリアンシャ";
+            const country = document.getElementById('sb-country').value;
+            const age = document.getElementById('sb-age').value;
+            const grade = document.getElementById('sb-grade').value;
+            const hobby = document.getElementById('sb-hobby').value;
+            const likes = document.getElementById('sb-likes').value;
+            const dislikes = document.getElementById('sb-dislikes').value;
+            const career = document.getElementById('sb-career').value;
+            const learned = document.getElementById('sb-learned').value;
+
+            // Lines container
+            const container = document.getElementById('speech-draft-container');
+            container.innerHTML = '';
+
+            // Core Speech script data mapping - Fully responsive bilingual blocks
+            const speechLines = [
+                { jp: "こんにちは。", romaji: "Konnichiwa.", translation: "Hello." },
+                { jp: "はじめまして。", romaji: "Hajimemashite.", translation: "Nice to meet you." },
+                { jp: `わたしは ${name} です。`, romaji: `Watashi wa ${name} desu.`, translation: `My name is ${name}.` },
+                { jp: `${country} から きました。`, romaji: `${country} kara kimashita.`, translation: `I came from ${country}.` },
+                { jp: `${age}さい です。`, romaji: `${age} sai desu.`, translation: `I am ${age} years old.` },
+                { jp: `${grade} です。`, romaji: `${grade} desu.`, translation: `I am a ${grade} student.` },
+                { jp: `しゅみ は ${hobby} です。`, romaji: `Shumi wa ${hobby} desu.`, translation: `My hobby is ${hobby}.` },
+                { jp: `${likes} が すきです。`, romaji: `${likes} ga suki desu.`, translation: `I like ${likes}.` },
+                { jp: `${dislikes} が きらいです。`, romaji: `${dislikes} ga kirai desu.`, translation: `I do not like ${dislikes}.` },
+                { jp: `しょうらい ${career} に なりたいです。`, romaji: `Shourai ${career} ni naritaidesu.`, translation: `In the future, I want to become a ${career}.` },
+                { jp: "にほん は とても きれいで あんぜんな くに だと おもいます。", romaji: "Nihon wa totemo kirei de anzen na kuni da to omoimasu.", translation: "I think Japan is a very beautiful and safe country." },
+                { jp: `にほんで ${learned} を まなびました。`, romaji: `Nihon de ${learned} o manabimashita.`, translation: `I learned ${learned} during my stay in Japan.` },
+                { jp: "また にほんに きたいです。", romaji: "Mata nihon ni kitaidesu.", translation: "I want to come to Japan again." },
+                { jp: "ありがとうございました。", romaji: "Arigatou gozaimashita.", translation: "Thank you very much." },
+                { jp: "よろしく おねがいします。", romaji: "Yoroshiku onegaishimasu.", translation: "Please treat me kindly." }
+            ];
+
+            // Render each line with styled blocks & click-to-speech features
+            speechLines.forEach((line, index) => {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = "bg-white p-3 rounded-2xl border border-pink-100 flex justify-between items-center gap-4 hover:shadow-sm transition-shadow";
+                lineDiv.innerHTML = `
+                    <div class="space-y-1 flex-grow">
+                        <span class="text-[10px] font-bold text-pink-400">Line ${index + 1}</span>
+                        <p class="text-base font-bold font-jp text-gray-800 tracking-wide">${line.jp}</p>
+                        <p class="text-xs text-gray-400 italic font-mono">${line.romaji}</p>
+                        <p class="text-xs text-pink-600 font-semibold">${line.translation}</p>
+                    </div>
+                    <button onclick="speakJapanese('${line.jp.replace(/'/g, "\\'")}')" class="bg-pink-100 text-pink-600 p-2.5 rounded-full hover:bg-pink-200 transition shadow-sm flex-shrink-0">
+                        🔊
+                    </button>
+                `;
+                container.appendChild(lineDiv);
+            });
+        }
+
+        // Play entire compiled script with short pauses using safe queueing pipeline
+        function playFullSpeech() {
+            const name = document.getElementById('sb-name').value || "プリアンシャ";
+            const country = document.getElementById('sb-country').value;
+            const age = document.getElementById('sb-age').value;
+            const grade = document.getElementById('sb-grade').value;
+            const hobby = document.getElementById('sb-hobby').value;
+            const likes = document.getElementById('sb-likes').value;
+            const dislikes = document.getElementById('sb-dislikes').value;
+            const career = document.getElementById('sb-career').value;
+            const learned = document.getElementById('sb-learned').value;
+
+            // Individual clean sentences for sequential play list
+            const sentenceList = [
+                "こんにちは。",
+                "はじめまして。",
+                `わたしは ${name} です。`,
+                `${country}からきました。`,
+                `${age}さいです。`,
+                `${grade}です。`,
+                `しゅみは ${hobby} です。`,
+                `${likes}がすきです。`,
+                `${dislikes}がきらいです。`,
+                `しょうらい ${career} になりたいです。`,
+                "にほんは とても きれいで あんぜんな くにだと おもいます。",
+                `にほんで ${learned} を まなびました。`,
+                "また にほんに きたいです。",
+                "ありがとうございました。",
+                "よろしく おねがいします。"
+            ];
+            
+            playSpeechInQueue(sentenceList);
+        }
+
+        // Print worksheet functionality
+        function printAppWorksheets() {
+            window.print();
+        }
+
+        // Auto initialization
+        window.onload = function() {
+            console.log("Sakura Bridges: Japanese Exchange student tutor application initialized.");
+            loadVoices();
+            buildCustomSpeech();
+        }
+    </script>
+</body>
+</html>
